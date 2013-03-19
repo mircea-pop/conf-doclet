@@ -1,34 +1,73 @@
 conf-doclet
 ===========
 
-Java Doclet for extracting configuration properties from java code
+Java Doclet for extracting configuration properties and their default values from java code.
 
 Usage
 ======
 Add the next code to the <code>build.gradle</code> file:
 ```groovy
-configDocletVersion = "0.1"
+confDocletVersion = "0.1"
 
 libraries = [
-configDoclet : "com.epages.doclets:config-doclet:${configDocletVersion}"
+confDoclet : "com.epages.doclets:conf-doclet:${confDocletVersion}"
 ]
 
 configurations {
-    configDoclet
+    confDoclet
 }
 
 dependencies {
-    configDoclet libraries.config_doclet
+    confDoclet libraries.conf_doclet
 }
 
-task configDoc(type: Javadoc) {
-    classpath = rootProject.configurations.configDoclet
+task confDoc(type: Javadoc) {
+    classpath = rootProject.configurations.confDoclet
     classpath += files(subprojects.collect { project ->
             project.sourceSets.main.compileClasspath
             })
     options.showAll()
-    destinationDir = new File(buildDir, 'docs/configdoc')
-    options.docletpath = configurations.configDoclet.files.asType(List)
+    destinationDir = new File(buildDir, 'docs/confdoc')
+    options.docletpath = configurations.confDoclet.files.asType(List)
     options.doclet = "com.epages.doclets.ConfDoclet"
+    title = "sample.conf"
 }
 ```
+To actually extract the condifguration properties from the java source code, you have to define a class with the
+<code>@ConfigurationSection</code> javadoc taglet.
+<br>
+<h4>Example: </h4>
+```java
+   /**
+     * class comment
+     * @ConfigurationSection ConfigClass
+     */
+    public class ConfigClass {
+        /**
+    	 * comment 1
+    	 */
+    	private static final String PROPERTY_1 = "property1";
+    	/**
+    	 * comment 2
+    	 */
+    	private static final String PROPERTY_2 = "property2";
+    	
+    	
+    	private static final String PROPERTY1_DEFAULT = "default value of property1";
+    	private static final String PROPERTY2_DEFAULT = "default value of property2";
+    }
+```
+<h4>Output</h4>
+
+With all of the above configured, the output will be a <code>sample.conf</code> file containing
+```java
+[PropertySection]
+;;comment 1
+;PropertySection.property1 = default value of property1
+
+;;comment 2
+;PropertySection.property2 = default value of property2
+```
+
+The number of classes with the <code>@ConfigurationSection</code> taglet, will be reflected in the number of 
+<code>[Section]</code>s in the output file.
