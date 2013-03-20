@@ -5,6 +5,8 @@ Java Doclet for extracting configuration properties and their default values fro
 
 Usage
 ======
+
+<h4>Configuration</h4>
 Add the next code to the <code>build.gradle</code> file:
 ```groovy
 confDocletVersion = "0.1"
@@ -33,10 +35,13 @@ task confDoc(type: Javadoc) {
     title = "sample.conf"
 }
 ```
-To actually extract the condifguration properties from the java source code, you have to define a class with the
-<code>@ConfigurationSection</code> javadoc taglet.
-<br>
-<h4>Example: </h4>
+
+<h4>Example</h4>
+
+To actually extract the configuration properties from the java source code, you have to follow some conventions
+in your configuration classes. The configuration class needs to have the <code>@ConfigurationSection</code>
+javadoc taglet.<br>
+
 ```java
    /**
      * section comment
