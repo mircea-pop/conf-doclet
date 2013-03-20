@@ -39,8 +39,8 @@ To actually extract the condifguration properties from the java source code, you
 <h4>Example: </h4>
 ```java
    /**
-     * class comment
-     * @ConfigurationSection ConfigClass
+     * section comment
+     * @ConfigurationSection PropertySection
      */
     public class ConfigClass {
         /**
@@ -61,6 +61,7 @@ To actually extract the condifguration properties from the java source code, you
 
 With all of the above configured, the output will be a <code>sample.conf</code> file containing
 ```java
+;;section comment
 [PropertySection]
 ;;comment 1
 ;PropertySection.property1 = default value of property1
