@@ -16,7 +16,7 @@ confDoclet : "com.epages.doclets:conf-doclet:${confDocletVersion}"
 ]
 
 configurations {
-    confDoclet
+    conf_doclet
 }
 
 dependencies {
@@ -77,3 +77,8 @@ With all of the above configured, the output will be a <code>sample.conf</code> 
 
 The number of classes with the <code>@ConfigurationSection</code> taglet, will be reflected in the number of 
 <code>[Section]</code>s in the output file.
+
+<h4>Gradle Command Line</h4>
+```groovy
+ > gradle confDoc
+```
