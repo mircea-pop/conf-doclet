@@ -9,18 +9,13 @@ Usage
 <h4>Configuration</h4>
 Add the next code to the <code>build.gradle</code> file:
 ```groovy
-confDocletVersion = "0.1"
-
-libraries = [
-confDoclet : "com.epages.doclets:conf-doclet:${confDocletVersion}"
-]
 
 configurations {
-    conf_doclet
+    confDoclet
 }
 
 dependencies {
-    confDoclet libraries.conf_doclet
+    confDoclet "com.epages.doclets:conf-doclet:0.1"
 }
 
 task confDoc(type: Javadoc) {
