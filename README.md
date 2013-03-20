@@ -40,7 +40,7 @@ task confDoc(type: Javadoc) {
 
 To actually extract the configuration properties from the java source code, you have to follow some conventions
 in your configuration classes. The configuration class needs to have the <code>@ConfigurationSection</code>
-javadoc taglet.<br>
+javadoc taglet and the defined properties (can even be PRIVATE) with their corresponding DEFAULT values (propertyName + "_DEFAULT").<br>
 
 ```java
    /**
