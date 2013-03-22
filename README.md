@@ -9,18 +9,13 @@ Usage
 <h4>Configuration</h4>
 Add the next code to the <code>build.gradle</code> file:
 ```groovy
-confDocletVersion = "0.1"
-
-libraries = [
-confDoclet : "com.epages.doclets:conf-doclet:${confDocletVersion}"
-]
 
 configurations {
     confDoclet
 }
 
 dependencies {
-    confDoclet libraries.conf_doclet
+    confDoclet "com.epages.doclets:conf-doclet:0.1"
 }
 
 task confDoc(type: Javadoc) {
@@ -40,7 +35,7 @@ task confDoc(type: Javadoc) {
 
 To actually extract the configuration properties from the java source code, you have to follow some conventions
 in your configuration classes. The configuration class needs to have the <code>@ConfigurationSection</code>
-javadoc taglet.<br>
+javadoc taglet and the defined properties (can even be PRIVATE) with their corresponding DEFAULT values (propertyName + "_DEFAULT").<br>
 
 ```java
    /**
@@ -77,3 +72,8 @@ With all of the above configured, the output will be a <code>sample.conf</code> 
 
 The number of classes with the <code>@ConfigurationSection</code> taglet, will be reflected in the number of 
 <code>[Section]</code>s in the output file.
+
+<h4>Gradle Command Line</h4>
+```groovy
+ > gradle confDoc
+```
