@@ -1,60 +1,31 @@
 package com.epages.doclets.file;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.epages.doclets.ConfDoclet;
 import com.epages.doclets.taglets.ConfigurationTaglets;
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.FieldDoc;
 import com.sun.javadoc.Tag;
 
 public class SampleConfSection {
-
     private final List<SampleConfProperty> properties = new ArrayList<>();
     private String sectionName;
     private final ClassDoc classDoc;
-    private static final Logger log = Logger.getLogger(ConfDoclet.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(SampleConfSection.class);
 
     public SampleConfSection(ClassDoc classDoc) {
-        log.info(String.format("Configuration Class %s detected", classDoc.name()));
+        logger.debug("Configuration Class {} found", classDoc.name());
         this.classDoc = classDoc;
     }
 
     public void process() {
         processType();
         processFields();
-
-        // processEnumWithReflection();
-    }
-
-    private void processEnumWithReflection() {
-        try {
-            Class<?> clazz = Class.forName(classDoc.qualifiedTypeName());
-            if (!clazz.isEnum()) {
-                return;
-            }
-
-            Field[] fields = clazz.getDeclaredFields();
-
-            List<Field> cst = new ArrayList<Field>();
-
-            for (Field f : fields) {
-                if (f.isEnumConstant()) {
-                    cst.add(f);
-                    System.out.println(f.getName());
-                }
-            }
-
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
     }
 
     private void processType() {
@@ -67,7 +38,7 @@ public class SampleConfSection {
 
     private void processFields() {
         FieldDoc[] fields = classDoc.fields();
-        log.info(String.format("Configuration Class %s has %d fields", classDoc.name(), fields.length));
+        logger.debug("Configuration Class {} has {} fields", classDoc.name(), fields.length);
 
         List<FieldDoc> keys = new ArrayList<>();
         List<FieldDoc> defaults = new ArrayList<>();
@@ -80,19 +51,41 @@ public class SampleConfSection {
             }
         }
 
-        if (keys.size() != defaults.size()) {
-            log.warning(String.format("%s: Not all keys have default values![keys=%d; defaults=%d]", classDoc.name(), keys.size(),
-                    defaults.size()));
-        }
+        checkIntegrity(keys, defaults);
 
         for (FieldDoc fieldDoc : keys) {
-            properties.add(new SampleConfProperty(getName() + "." + fieldDoc.constantValueExpression(), fieldDoc.commentText(), getDefault(
-                    defaults, fieldDoc.name())));
+            properties.add(new SampleConfProperty(getName() + "." + fieldDoc.constantValueExpression(), fieldDoc.commentText(),
+                    getDefaultValue(defaults, fieldDoc.name())));
+        }
+    }
+
+    private void checkIntegrity(List<FieldDoc> keys, List<FieldDoc> defaults) {
+        if (keys.size() != defaults.size()) {
+            logger.warn("Not all configuration properties have default values in section {}![properties={}; default_values={}]", getName(),
+                    keys.size(), defaults.size());
+        }
+
+        for (FieldDoc key : keys) {
+            String property = key.name();
+            String defaultKey = getDefaultKey(defaults, key.name());
+            logger.debug("property={}; defaultKey={}", property, defaultKey);
+            if (StringUtils.isEmpty(defaultKey)) {
+                logger.warn("No default value found for property {} in section {}!", property, getName());
+            }
         }
 
     }
 
-    private String getDefault(List<FieldDoc> defaults, String name) {
+    private String getDefaultKey(List<FieldDoc> defaults, String name) {
+        for (FieldDoc fieldDoc : defaults) {
+            if (fieldDoc.name().startsWith(name)) {
+                return fieldDoc.name();
+            }
+        }
+        return "";
+    }
+
+    private String getDefaultValue(List<FieldDoc> defaults, String name) {
         for (FieldDoc fieldDoc : defaults) {
             if (fieldDoc.name().startsWith(name)) {
                 return fieldDoc.constantValueExpression();
@@ -115,7 +108,6 @@ public class SampleConfSection {
 
         for (SampleConfProperty property : properties) {
             builder.append(property.asString());
-            builder.append("\n");
         }
 
         return builder.toString();

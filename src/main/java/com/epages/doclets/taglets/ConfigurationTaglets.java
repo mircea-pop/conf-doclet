@@ -2,7 +2,7 @@ package com.epages.doclets.taglets;
 
 public enum ConfigurationTaglets {
 
-    SECTION("Section"), PROPERTY("Property");
+    SECTION("Section");
 
     private final String tag;
 

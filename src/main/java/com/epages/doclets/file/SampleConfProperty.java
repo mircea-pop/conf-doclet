@@ -1,6 +1,5 @@
 package com.epages.doclets.file;
 
-
 public class SampleConfProperty {
     private final String comment;
     private final String key;

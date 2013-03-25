@@ -6,12 +6,17 @@ import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.epages.doclets.conf.SampleConfConfiguration;
 
 public class SampleConfFile {
 
     private final List<SampleConfSection> sections = new LinkedList<>();
     private final SampleConfConfiguration conf;
+
+    private static final Logger logger = LoggerFactory.getLogger(SampleConfFile.class);
 
     public SampleConfFile(SampleConfConfiguration conf) {
         this.conf = conf;
@@ -22,18 +27,13 @@ public class SampleConfFile {
     }
 
     public void writeToDisk() {
-        PrintWriter writer = null;
-        try {   
-            writer = new PrintWriter(conf.getOutputFile());
+        try (PrintWriter writer = new PrintWriter(new File(conf.getDestDir(), conf.getOutputFileName()))) {
+            for (SampleConfSection section : sections) {
+                writer.write(section.asString());
+                writer.println();
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Couldn't create the {} file: {}", conf.getOutputFileName(), e.getMessage());
         }
-
-        for (SampleConfSection section : sections) {
-            writer.write(section.asString());
-            writer.println();
-        }
-
-        writer.close();
     }
 }
