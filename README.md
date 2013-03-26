@@ -1,4 +1,4 @@
-conf-doclet
+conf-doclet [![Build Status](https://travis-ci.org/mircea-pop/conf-doclet.png?branch=dev)](https://travis-ci.org/mircea-pop/conf-doclet)
 ===========
 
 Java Doclet for extracting configuration properties and their default values from java code.
