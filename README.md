@@ -27,15 +27,17 @@ task confDoc(type: Javadoc) {
     destinationDir = new File(buildDir, 'docs/confdoc')
     options.docletpath = configurations.confDoclet.files.asType(List)
     options.doclet = "com.epages.doclets.ConfDoclet"
-    title = "sample.conf"
+    options.addStringOption("outputFile", "sample.conf")
 }
 ```
 
 <h4>Example</h4>
 
 To actually extract the configuration properties from the java source code, you have to follow some conventions
-in your configuration classes. The configuration class needs to have the <code>@ConfigurationSection</code>
-javadoc taglet and the defined properties (can even be PRIVATE) with their corresponding DEFAULT values (propertyName + "_DEFAULT").<br>
+in your configuration classes: <br>
+* the <code>@ConfigurationSection</code> javadoc taglet in the class comment
+* the defined properties (can even be PRIVATE) with their corresponding DEFAULT values (propertyName + "_DEFAULT").<br>
+* the defined properties need to be <b>STATIC</b> and <b>FINAL</b>
 
 ```java
    /**
@@ -77,3 +79,7 @@ The number of classes with the <code>@ConfigurationSection</code> taglet, will b
 ```groovy
  > gradle confDoc
 ```
+
+<h4>Limitations</h4>
+
+The default values can only be primitives. No objects supported. If an object is encountered for a default value, the default value is set to an empty string and a warning message will be printed.
