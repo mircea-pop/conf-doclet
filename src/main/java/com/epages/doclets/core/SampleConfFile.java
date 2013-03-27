@@ -1,4 +1,4 @@
-package com.epages.doclets.file;
+package com.epages.doclets.core;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +30,8 @@ public class SampleConfFile {
         try (PrintWriter writer = new PrintWriter(new File(conf.getDestDir(), conf.getOutputFileName()))) {
             for (SampleConfSection section : sections) {
                 writer.write(section.asString());
+                writer.write(";----------------------------------------------------------------------------");
+                writer.println();
                 writer.println();
             }
         } catch (IOException e) {

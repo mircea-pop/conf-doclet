@@ -15,7 +15,7 @@ public class ConfDoclet {
     private SampleConfConfiguration conf;
 
     private static final Logger logger = LoggerFactory.getLogger(ConfDoclet.class);
-    
+
     public ConfDoclet(RootDoc root) {
         this.root = root;
         htmlDoclet.configuration.root = root;
@@ -37,6 +37,10 @@ public class ConfDoclet {
     public static int optionLength(final String option) {
         if (SampleConfConfiguration.OPTIONS_OUTPUT_FILE.equals(option)) {
             return 2;
+        }
+        if (SampleConfConfiguration.OPTIONS_EXCLUDE_PROP_WITH_UNDEFINED_DEFAULTS.equals(option)
+                || SampleConfConfiguration.OPTIONS_INCLUDE_SECTION_IN_KEY_NAME.equals(option)) {
+            return 1;
         }
         return HtmlDoclet.optionLength(option);
     }

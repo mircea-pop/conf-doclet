@@ -1,4 +1,8 @@
-package com.epages.doclets.file;
+package com.epages.doclets.core;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.epages.doclets.Utils;
 
 public class SampleConfProperty {
     private final String comment;
@@ -6,9 +10,12 @@ public class SampleConfProperty {
     private final String defaultValue;
 
     public SampleConfProperty(String key, String comment, String defaultValue) {
-        this.comment = comment;
+        if (StringUtils.isEmpty(key)) {
+            throw new IllegalArgumentException("NULL or empty property keys not allowed!");
+        }
         this.key = key.replaceAll("\"", "");
-        this.defaultValue = defaultValue.replaceAll("\"", "");
+        this.defaultValue = defaultValue;
+        this.comment = comment;
     }
 
     public String getComment() {
@@ -53,15 +60,22 @@ public class SampleConfProperty {
         return true;
     }
 
+    public boolean hasComment() {
+        return !StringUtils.isEmpty(getComment());
+    }
+
+    public boolean hasKey() {
+        return !StringUtils.isEmpty(getKey());
+    }
+
     public String asString() {
         StringBuilder builder = new StringBuilder();
-        if (getComment() != null) {
-            builder.append(";;");
-            builder.append(getComment());
-            builder.append("\n");
+        if (hasComment()) {
+            builder.append(Utils.ensureComment(String.format("%s\n", getComment())));
         }
-        builder.append(";");
-        builder.append(String.format("%s = %s\n", getKey(), getDefaultValue()));
+        if (hasKey()) {
+            builder.append(String.format(";%s = %s\n", getKey(), getDefaultValue()));
+        }
         return builder.toString();
     }
 }
