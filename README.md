@@ -9,6 +9,9 @@ Usage
 <h4>Configuration</h4>
 Add the next code to the <code>build.gradle</code> file:
 ```groovy
+repositories {
+maven { url "http://epages-de.github.com/maven-repo/releases" }
+}
 
 configurations {
     confDoclet
