@@ -28,8 +28,14 @@ task confDoc(type: Javadoc) {
     options.docletpath = configurations.confDoclet.files.asType(List)
     options.doclet = "com.epages.doclets.ConfDoclet"
     options.addStringOption("outputFile", "sample.conf")
+    options.addBooleanOption("excludePropWithUndefinedDefaults", true)
 }
 ```
+<h5>Additional Options</h5>
+Beside the javadoc options, there are some other additional ones, specific to this Doclet:
+
+* <b>outputFile</b> - the name of the output file
+* <b>excludePropWithUndefinedDefaults</b> - the detected properties which have no default values are added to the generated file by default. If this property is set, these properties will be excluded from the generated file.
 
 <h4>Example</h4>
 
