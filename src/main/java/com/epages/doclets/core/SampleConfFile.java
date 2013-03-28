@@ -6,20 +6,18 @@ import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.epages.doclets.conf.Logger;
 import com.epages.doclets.conf.SampleConfConfiguration;
 
 public class SampleConfFile {
 
     private final List<SampleConfSection> sections = new LinkedList<>();
     private final SampleConfConfiguration conf;
+    private Logger logger;
 
-    private static final Logger logger = LoggerFactory.getLogger(SampleConfFile.class);
-
-    public SampleConfFile(SampleConfConfiguration conf) {
+    public SampleConfFile(SampleConfConfiguration conf, Logger logger) {
         this.conf = conf;
+        this.logger = logger;
     }
 
     public void addSection(SampleConfSection section) {
@@ -35,7 +33,7 @@ public class SampleConfFile {
                 writer.println();
             }
         } catch (IOException e) {
-            logger.error("Couldn't create the {} file: {}", conf.getOutputFileName(), e.getMessage());
+            logger.error("Couldn't create the %s file: %s", conf.getOutputFileName(), e.getMessage());
         }
     }
 }

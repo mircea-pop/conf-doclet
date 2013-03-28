@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.epages.doclets.Utils;
+import com.epages.doclets.conf.Logger;
 import com.epages.doclets.conf.SampleConfConfiguration;
 import com.epages.doclets.taglets.ConfigurationTaglets;
 import com.sun.javadoc.ClassDoc;
@@ -18,13 +17,15 @@ public class SampleConfSection {
     private final List<SampleConfProperty> properties = new ArrayList<>();
     private String sectionName;
     private final ClassDoc classDoc;
-    private SampleConfConfiguration conf;
-    private static final Logger logger = LoggerFactory.getLogger(SampleConfSection.class);
+    private final Logger logger;
 
-    public SampleConfSection(ClassDoc classDoc, SampleConfConfiguration conf) {
-        logger.debug("Configuration Class {} found", classDoc.name());
+    private SampleConfConfiguration conf;
+
+    public SampleConfSection(ClassDoc classDoc, SampleConfConfiguration conf, Logger logger) {
+        logger.notice("Configuration Class %s found", classDoc.name());
         this.classDoc = classDoc;
         this.conf = conf;
+        this.logger = logger;
     }
 
     public void process() {
@@ -43,17 +44,17 @@ public class SampleConfSection {
     private void processFields() {
         List<PropertyField> fields = convertToPropertyFields(classDoc.fields());
 
-        logger.debug("Configuration Class {} has {} eligible fields", classDoc.name(), fields.size());
+        logger.notice("Configuration Class %s has %d eligible fields", classDoc.name(), fields.size());
 
         List<PropertyField> keys = new ArrayList<>();
         List<PropertyField> defaults = new ArrayList<>();
 
         for (PropertyField fieldDoc : fields) {
             if (fieldDoc.isProperty()) {
-                logger.debug("{}:key: Adding {}", getName(), fieldDoc);
+                logger.notice("%s:key: Adding %s", getName(), fieldDoc);
                 keys.add(fieldDoc);
             } else if (fieldDoc.isDefault()) {
-                logger.debug("{}:default: Adding {}", getName(), fieldDoc);
+                logger.notice("%s:default: Adding %s", getName(), fieldDoc);
                 defaults.add(fieldDoc);
             }
         }
@@ -85,16 +86,16 @@ public class SampleConfSection {
 
     private void checkIntegrity(List<PropertyField> keys, List<PropertyField> defaults) {
         if (keys.size() > defaults.size()) {
-            logger.warn("{}: Not all configuration properties have default values![properties={}; default_values={}]", getName(),
+            logger.warn("%s: Not all configuration properties have default values![properties=%d; default_values=%d]", getName(),
                     keys.size(), defaults.size());
         }
 
         for (PropertyField key : keys) {
             String propertyKey = key.getName();
             String defaultKey = getDefaultKey(defaults, key.getName());
-            logger.debug("{}: propertyKey={}; defaultKey={}", getName(), propertyKey, defaultKey);
+            logger.notice("%s: propertyKey=%s; defaultKey=%s", getName(), propertyKey, defaultKey);
             if (StringUtils.isEmpty(defaultKey)) {
-                logger.warn("{}: No default value found for property {}!", getName(), propertyKey);
+                logger.warn("%s: No default value found for property %s!", getName(), propertyKey);
             }
         }
 
@@ -118,7 +119,7 @@ public class SampleConfSection {
         }
         if (PropertyField.VALUE_NOT_DEFINED.equals(retval)) {
             retval = "";
-            logger.warn("{}: Only primitives are supported for default values! {} default value not processed!", getName(), name);
+            logger.warn("%s: Only primitives are supported for default values! %s default value not processed!", getName(), name);
         }
         return retval;
     }

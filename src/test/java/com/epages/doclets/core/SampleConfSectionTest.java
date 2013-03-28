@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.epages.doclets.conf.Logger;
 import com.epages.doclets.conf.SampleConfConfiguration;
 import com.epages.doclets.taglets.ConfigurationTaglets;
 import com.sun.javadoc.ClassDoc;
@@ -34,7 +35,7 @@ public class SampleConfSectionTest {
         when(classDoc.name()).thenReturn("TestConfigClass");
         when(classDoc.commentText()).thenReturn("section_comment");
 
-        SUT = new SampleConfSection(classDoc, Mockito.mock(SampleConfConfiguration.class));
+        SUT = new SampleConfSection(classDoc, Mockito.mock(SampleConfConfiguration.class), Mockito.mock(Logger.class));
         SUT.process();
     }
 

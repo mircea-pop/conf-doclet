@@ -1,8 +1,5 @@
 package com.epages.doclets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.epages.doclets.conf.SampleConfConfiguration;
 import com.epages.doclets.conf.SampleConfConfigurationImpl;
 import com.sun.javadoc.RootDoc;
@@ -13,8 +10,6 @@ public class ConfDoclet {
     private final HtmlDoclet htmlDoclet = new HtmlDoclet();
     private final RootDoc root;
     private SampleConfConfiguration conf;
-
-    private static final Logger logger = LoggerFactory.getLogger(ConfDoclet.class);
 
     public ConfDoclet(RootDoc root) {
         this.root = root;
@@ -29,7 +24,7 @@ public class ConfDoclet {
     }
 
     public void start() {
-        logger.info("ConfDoclet.start()");
+        root.printNotice(this.getClass().getName() + ".start()");
         SampleConf sampleConf = new SampleConf(conf, root);
         sampleConf.start();
     }

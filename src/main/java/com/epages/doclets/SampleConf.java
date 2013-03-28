@@ -1,5 +1,6 @@
 package com.epages.doclets;
 
+import com.epages.doclets.conf.Logger;
 import com.epages.doclets.conf.SampleConfConfiguration;
 import com.epages.doclets.core.SampleConfFile;
 import com.epages.doclets.core.SampleConfSection;
@@ -18,12 +19,13 @@ public class SampleConf {
     }
 
     public void start() {
-        SampleConfFile confFile = new SampleConfFile(conf);
+        Logger logger = new Logger(root);
+        SampleConfFile confFile = new SampleConfFile(conf, logger);
         ClassDoc[] classes = root.classes();
 
         for (ClassDoc classDoc : classes) {
             if (classDoc.tags(ConfigurationTaglets.SECTION.getTag()).length > 0) {
-                SampleConfSection section = new SampleConfSection(classDoc, conf);
+                SampleConfSection section = new SampleConfSection(classDoc, conf, logger);
                 section.process();
                 confFile.addSection(section);
             }
