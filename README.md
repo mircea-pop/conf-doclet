@@ -86,6 +86,11 @@ The number of classes with the <code>@ConfigurationSection</code> taglet, will b
  > gradle confDoc
 ```
 
+<h4>Logging</h4>
+
+The Doclet is using sl4j facade with logback-classic as implementation. The logging level can be changed
+as described in <a href="http://logback.qos.ch/manual/configuration.html"> Logback Configuration </a>. Note that by default is using the DEBUG level.
+
 <h4>Limitations</h4>
 
 The default values can only be primitives. No objects supported. If an object is encountered for a default value, the default value is set to an empty string and a warning message will be printed.
