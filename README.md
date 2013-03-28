@@ -1,4 +1,4 @@
-conf-doclet [![Build Status](https://travis-ci.org/mircea-pop/conf-doclet.png?branch=dev)](https://travis-ci.org/mircea-pop/conf-doclet)
+conf-doclet [![Build Status](https://travis-ci.org/mircea-pop/conf-doclet.png?branch=v0.2)](https://travis-ci.org/mircea-pop/conf-doclet)
 ===========
 
 Java Doclet for extracting configuration properties and their default values from java code.
@@ -15,7 +15,7 @@ configurations {
 }
 
 dependencies {
-    confDoclet "com.epages.doclets:conf-doclet:0.1"
+    confDoclet "com.epages.doclets:conf-doclet:0.2"
 }
 
 task confDoc(type: Javadoc) {
@@ -84,6 +84,19 @@ The number of classes with the <code>@ConfigurationSection</code> taglet, will b
 <h4>Gradle Command Line</h4>
 ```groovy
  > gradle confDoc
+```
+
+<h4>Logging</h4>
+
+The logging is integrated in javadoc logging. That means it can be controlled throught the command line options: quiet or verbose.
+In Gradle, Javadoc task is QUIET by default. For verbose, you can call <code>verbose()</code> on the options object:
+```groovy
+
+task confDoc(type: Javadoc) {
+    //...
+    options.verbose()
+    //...
+}
 ```
 
 <h4>Limitations</h4>
