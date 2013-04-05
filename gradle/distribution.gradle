@@ -1,3 +1,7 @@
+def gitMavenRepo = 'https://github.com/mircea-pop/maven-repo.git'
+
+def localDeploymentFolder = "${buildDir}/maven-repo"
+
 def isDevBuild
 def isReleaseBuild
 def isCi
@@ -6,11 +10,11 @@ def uploadRepositoryUrl
 
 if (hasProperty("release")) {
     isReleaseBuild = true
-    uploadRepositoryUrl = "file:../gh-pages/maven-repo/releases"
+    uploadRepositoryUrl = "file:${localDeploymentFolder}/releases"
 }else if (hasProperty("ci")) {
     isCi = true
     project.version += '-SNAPSHOT'
-    uploadRepositoryUrl = "file:../gh-pages/maven-repo/snapshots"
+    uploadRepositoryUrl = "file:${localDeploymentFolder}/snapshots"
 }
 else {
     isDevBuild = true
@@ -25,14 +29,14 @@ uploadArchives {
                 name = "GitHub"
 
                 repository(url: uploadRepositoryUrl) {
-                }         
+                }
 
-                pom.project {
+                pom.project  {
                     name project.name
                     packaging 'jar'
                     description project.description
                     url 'https://github.com/mircea-pop/conf-doclet.git'
-                    
+
                     licenses {
                         license {
                             name 'The Apache Software License, Version 2.0'
@@ -49,10 +53,23 @@ uploadArchives {
                         developer {
                             id 'mircea-pop'
                             name 'Mircea Pop'
-                        }                       
+                        }
                     }
                 }
             }
         }
     }
 }
+
+apply plugin: 'github-pages'
+
+githubPages {
+    repoUri = gitMavenRepo
+    workingPath = localDeploymentFolder
+}
+
+task publish2Git(dependsOn: pushGhPages){ description = "Runs the maven installer and pushes the artifacts to the Git-based maven repository"  }
+
+task commit2Git(dependsOn: commitGhPages){ description = "Runs the maven installer and commits the artifacts to the Git-based maven repository"    }
+
+addGhPages.dependsOn uploadArchives
