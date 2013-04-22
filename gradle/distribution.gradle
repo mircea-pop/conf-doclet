@@ -1,5 +1,3 @@
-def gitMavenRepo = 'https://github.com/mircea-pop/maven-repo.git'
-
 def localDeploymentFolder = "${buildDir}/maven-repo"
 
 def isDevBuild
@@ -67,6 +65,7 @@ githubPages {
     repoUri = gitMavenRepo
     workingPath = localDeploymentFolder
 }
+commitGhPages.message = "${project.name}-${project.version}"
 
 task publish2Git(dependsOn: pushGhPages){ description = "Runs the maven installer and pushes the artifacts to the Git-based maven repository"  }
 

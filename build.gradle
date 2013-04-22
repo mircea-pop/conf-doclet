@@ -1,5 +1,6 @@
 buildscript {
-    repositories {mavenCentral()}
+    repositories {mavenCentral()
+    }
     dependencies { classpath 'org.ajoberstar:gradle-git:0.5.0' }
 }
 repositories {mavenCentral()}
@@ -24,5 +25,9 @@ group = "com.epages.doclets"
 description = 'Java Doclet for extracting configuration properties from java code'
 archivesBaseName = "conf-doclet"
 version = "0.2"
+
+ext {
+    gitMavenRepo = 'https://github.com/ePages-de/maven-repo.git'
+}
 
 apply from : './gradle/distribution.gradle'
